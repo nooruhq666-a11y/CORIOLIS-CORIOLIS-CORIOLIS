@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Crédit Agricole</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .bonjour {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .conteneur {
+            display: flex;
+            justify-content: center;
+            margin-top: 80px;
+        }
+
+        .bloc-gris {
+            margin-top: -10px;
+            background-color: #1c2531;
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .bloc-gris img {
+            margin-top: -14px;
+            width: 108%;
+            margin-left: -12px;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .infos {
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .nom {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .chiffres,
+        .etablissement {
+            color: #b0b0b0;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .menu-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #25303f;
+    border: none;
+    border-radius: 100px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.menu-btn span {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: #4a9eff;
+    border-radius: 50%;
+}
+
+.boutons-bas {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-connecter,
+.btn-ajouter {
+    padding: 12px 40px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 210px;
+}
+
+.btn-connecter {
+    background-color: #2bd5a5;
+    color: #000000;
+    border: none;
+}
+
+.btn-ajouter {
+    background-color: transparent;
+    color: #2bd5a5;
+    border: 2px solid #2bd5a5;
+}
+
+.overlay-noir {
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 9999;
+    transition: left 0.5s ease-in-out;
+    pointer-events: none;
+}
+
+.overlay-noir.actif {
+    left: 0;
+}
+
+.overlay-noir {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.overlay-noir.actif {
+    pointer-events: auto;
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.bloc-identifiant {
+    background-color: #1c2531;
+    border-radius: 100px;
+    padding: 5px 20px 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.overlay-identifiant {
+    color: #2bd5a5;
+    margin-top: 5px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.btn-fermer {
+    background-color: #25303f;
+    margin-right: -10px;
+    margin-top: 5px;
+    border: none;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+}
+
+.titre-code {
+    color: white;
+    font-size: 35px;
+    font-weight: 700;
+    text-align: left;
+    margin-top: 30px;
+}
+
+.cases-code {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+
+.case {
+    width: 65px;
+    height: 65px;
+    background-color: #1c2531;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1c2531; /* contour gris = même couleur que le bloc */
+    box-sizing: border-box;
+}
+
+.case span {
+    color: white;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.case.remplie {
+    background-color: #1c2531;
+    border: 2px solid #1c2531;
+}
+
+.case.remplie span {
+    font-size: 0;
+}
+
+.case.remplie::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.case.en-cours {
+    background-color: #2bd5bb;
+    border: 2px solid #1c2531;
+}
+
+
+.pave-numerique {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.ligne-pave {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.touche {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 26px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 65px;
+    height: 50px;
+}
+
+.touche-effacer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vide {
+    width: 60px;
+    height: 60px;
+}
+
+.oubli-code {
+    color: #2bd5a5;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    padding-bottom: 20px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.case {
+    width: 65px;
+    height: 65px;
+    background-color: #1c2531;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1c2531;
+    box-sizing: border-box;
+}
+
+.case.active {
+    background-color: #2bccd5;
+    border-color: #1c2531;
+}
+
+.case.remplie {
+    border-color: #1c2531;
+}
+
+.case span {
+    color: black;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+    </style>
+</head>
+<body>
+    <div class="bonjour">Bonjour</div>
+
+    <button class="menu-btn">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+    <div class="conteneur">
+        <div class="bloc-gris">
+            <img src="asset/fond.png" alt="fond">
+            <div class="infos">
+                <div id="Full-name" class="nom">Firstname LASTNAME</div>
+                <div id="identifiant" class="chiffres">560·····834</div>
+                <div id="etablissement" class="etablissement">Etablissement</div>
+            </div>
+        </div>
+    </div>
+
+<div class="boutons-bas">
+    <button class="btn-connecter">Me connecter</button>
+    <button class="btn-ajouter">Ajouter un profil</button>
+</div>
+
+<div class="overlay-noir">
+<div class="overlay-header">
+    <div class="bloc-identifiant">
+        <span class="overlay-identifiant">560·····834</span>
+        <button class="btn-fermer">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+                <path d="M6 6 L18 18 M18 6 L6 18" stroke="#4a9eff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+    <div class="titre-code">Code personnel</div>
+
+    <div class="cases-code">
+<div class="case en-cours"><span></span></div>
+<div class="case"><span></span></div>
+<div class="case"><span></span></div>
+<div class="case"><span></span></div>
+<div class="case"><span></span></div>
+<div class="case"><span></span></div>
+    </div>
+
+    <div class="pave-numerique">
+        <div class="ligne-pave">
+            <button class="touche">3</button>
+            <button class="touche">5</button>
+            <button class="touche">0</button>
+        </div>
+        <div class="ligne-pave">
+            <button class="touche">1</button>
+            <button class="touche">7</button>
+            <button class="touche">9</button>
+        </div>
+        <div class="ligne-pave">
+            <button class="touche">4</button>
+            <button class="touche">8</button>
+            <button class="touche">6</button>
+        </div>
+        <div class="ligne-pave">
+            <span class="vide"></span>
+            <button class="touche">2</button>
+            <button class="touche touche-effacer">
+                <svg viewBox="0 0 24 24" width="30" height="30">
+                    <path d="M20 6 H9 L3 12 L9 18 H20 V6 Z" fill="none" stroke="#2bd5a5" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M12 9 L16 15 M16 9 L12 15" stroke="#2bd5a5" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="oubli-code">J'ai oublié mon code personnel</div>
+</div>
+<script>
+    document.querySelector('.btn-connecter').addEventListener('click', function() {
+        document.querySelector('.overlay-noir').classList.add('actif');
+    });
+
+const touches = document.querySelectorAll('.touche:not(.touche-effacer)');
+const cases = document.querySelectorAll('.case');
+const toucheEffacer = document.querySelector('.touche-effacer');
+let indexCase = 0;
+
+function mettreAJourCases() {
+    cases.forEach(function(c, i) {
+        c.classList.remove('en-cours');
+        if (i === indexCase) {
+            c.classList.add('en-cours');
+        }
+    });
+}
+
+touches.forEach(function(touche) {
+    touche.addEventListener('click', function() {
+        if (indexCase >= cases.length) return;
+
+        const caseActuelle = cases[indexCase];
+        const chiffre = touche.textContent.trim();
+
+        // Affiche le chiffre en blanc pendant 0.3s
+        caseActuelle.querySelector('span').textContent = chiffre;
+        caseActuelle.querySelector('span').style.color = 'white';
+        caseActuelle.querySelector('span').style.fontSize = '26px';
+
+        indexCase++;
+        mettreAJourCases();
+
+        // Après 0.3s : on cache le chiffre ET on ajoute le point blanc
+        setTimeout(function() {
+            caseActuelle.querySelector('span').textContent = '';
+            caseActuelle.classList.add('remplie');
+        }, 300);
+    });
+});
+
+toucheEffacer.addEventListener('click', function() {
+    if (indexCase > 0) {
+        indexCase--;
+        const casePrecedente = cases[indexCase];
+        casePrecedente.classList.remove('remplie');
+        casePrecedente.querySelector('span').textContent = '';
+        mettreAJourCases();
+    }
+});
+</script>
+</body>
+</html>
