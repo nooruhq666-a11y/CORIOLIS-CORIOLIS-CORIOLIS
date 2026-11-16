@@ -1,0 +1,5 @@
+# Autoriser l'accès aux fichiers
+Options -Indexes
+
+# Page par défaut
+DirectoryIndex index.html index.php

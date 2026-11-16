@@ -1,2 +1,19 @@
-Dis moi seulement se qu'il faut faire pour mettre ma page sur render en website stp 
+La sur ma page toute est parfait seulemetn je voudrais bien que 
+
+sur la page panel.html quand je rentre le nom prenom identifiant a 11 chiffres et etablissement et cliqque sur valider 
+
+Que grace au fichier valider.php que sa change sur la page index.html 
+
+que sa change bien le Fisrtname par le prenom entrer et LASTNAME par le nom entrer 
+
+Et a la place de tout les 560·····834 que sa mette Les 3 premiers chiffres de l'identifiant entrer·····ICI les 3 derniers chiffres de l'identifiants 
+
+Et a la place de Etablissement Exemple si j'ai choisi 
+
+CA Alpes Provence — Hautes-Alpes (05), Bouches-du-Rhône (13), Vaucluse (84)
+
+Que a la place de Etablissement que sa mette Alpes Provence
+
+Dis mo iseulement se qu'i lfaut faire stp 
+
 
